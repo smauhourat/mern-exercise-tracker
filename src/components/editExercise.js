@@ -13,7 +13,6 @@ class EditExercise extends Component {
         //console.log(this.props.history);
 
         this.state = {
-            _id: '',
             description: '',
             username: '',
             date: new Date(),
@@ -42,7 +41,6 @@ class EditExercise extends Component {
             .then(res => {
                 console.log(res.data);
                 this.setState({
-                    _id: res.data._id,
                     username: res.data.username,
                     description: res.data.description,
                     duration: res.data.duration,
@@ -72,7 +70,7 @@ class EditExercise extends Component {
     updateExercise(event) {
         event.preventDefault();
 
-        axios.put('http://localhost:5000/exercises/' + this.state._id, this.state)
+        axios.put('http://localhost:5000/exercises/' + this.props.match.params.id, this.state)
             .then(res => {
                 toast.success(res.data.status);
                 this.props.history.replace('/');

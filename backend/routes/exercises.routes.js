@@ -35,12 +35,12 @@ router.put('/:id', async (req, res) => {
     const duration = req.body.duration;
     const date = req.body.date;
 
-    const exercise = new Exercise({
+    const exercise = {
         username, 
         description,
         duration, 
         date
-    });
+    };
 
     await Exercise.findByIdAndUpdate(req.params.id, exercise)
     res.json({status: 'Exercise Updated'})
