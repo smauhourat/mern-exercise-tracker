@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
 
 import Navbar from './components/navbar';
 import ExercisesList from './components/exercisesList';
@@ -15,7 +16,8 @@ function App() {
   return (
     <Router>
         <div className="container">
-          <Navbar />
+          <Navbar logo={logo}/>
+          <ToastContainer position={toast.POSITION.TOP_RIGHT} autoClose={2000} hideProgressBar={true}/>
           <Route path="/" exact component={ExercisesList} />
           <Route path="/edit/:id" component={EditExercise} />
           <Route path="/create" component={CreateExercise} />

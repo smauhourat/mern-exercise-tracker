@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import 'react-datepicker/dist/react-datepicker.css';
 
 export default class createExercise extends Component {
     constructor(props) {
         super(props);
-
+        
         this.state = {
             description: '',
             username: '',
@@ -21,12 +22,16 @@ export default class createExercise extends Component {
         this.addExercise = this.addExercise.bind(this);
     }
 
-    //harcodeamos los usuarios
     componentDidMount() {
-        this.setState({
-            users: ['username1', 'username2', 'username3'],
-            username: 'username1'
-        });
+        axios.get('http://localhost:5000/users')
+            .then(res => {
+                if(res.data.length > 0) {
+                    this.setState({
+                        users: res.data.map(user => user.username),
+                        username: res.data[0].username
+                    });
+                }
+            });
     }
 
     onChangeDate(date) {
@@ -47,10 +52,17 @@ export default class createExercise extends Component {
 
         axios.post('http://localhost:5000/exercises', this.state)
             .then(res => {
-                { console.log('OK') }
+                toast.success(res.data.status);
+                this.props.history.replace('/');
             })
-            .catch((error) => { console.log(error); });
-        
+            .catch(error => { 
+                console.log(error);
+                toast.error(error.description);
+            });
+    }
+
+    cancelForm = () => {
+        this.props.history.goBack();
     }
 
     render() {
@@ -105,7 +117,10 @@ export default class createExercise extends Component {
                             className="form-control"
                             />
                     </div>
-                    <button type="submit" className="btn btn-primary">Send</button>
+                    <div className="form-group">
+                        <button type="submit" className="btn btn-primary mx-2">Send</button>
+                        <button type="button" onClick={this.cancelForm} className="btn btn-secondary mx-2">Cancel</button>
+                    </div>
                 </form>
             </div>
         )
